@@ -5,15 +5,19 @@ const cors = require("cors");
 const CustomError = require("./utils/CustomError")
 const handleError = require( "./utils/handleError" );
 const connectDB = require( "./config/db" );
-const {PORT,MONGO_CONNECTION_STRING} = process.env
+const postRouter = require("./routers/postRouter")
+const {PORT} = process.env
 connectDB();
 
 const app = express()
 
 app.use(cors())
+app.use(express.json())
+
+app.use("/posts",postRouter)
 
 app.get("/",(req,res,next)=>{
-    res.status(200).json({status:"success",message:"Success"})
+    res.status(200).json({status:"success",message:"Blog api running"})
 })
 
 app.all("*",(req,res,next)=>{
