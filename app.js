@@ -6,6 +6,7 @@ const CustomError = require("./utils/CustomError")
 const handleError = require( "./utils/handleError" );
 const connectDB = require( "./config/db" );
 const postRouter = require("./routers/postRouter")
+const userRouter = require("./routers/userRouter")
 const {PORT} = process.env
 connectDB();
 
@@ -15,6 +16,7 @@ app.use(cors())
 app.use(express.json())
 
 app.use("/posts",postRouter)
+app.use("/users",userRouter)
 
 app.get("/",(req,res,next)=>{
     res.status(200).json({status:"success",message:"Blog api running"})

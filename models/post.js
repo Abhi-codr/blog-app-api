@@ -3,9 +3,10 @@ const mongoose = require("mongoose")
 const Schema = mongoose.Schema;
 
 const PostSchema = new Schema({
-  title: String,
-  content:String,
-  date:{type:Date,default:new Date()}
+  title: {type:String,required:true},
+  content:{type:String,required:true},
+  date:{type:Date,default:new Date()},
+  createdBy:{ type:Schema.Types.ObjectId , ref: "User", required:true}
 });
 
 module.exports = mongoose.model("Post", PostSchema)
