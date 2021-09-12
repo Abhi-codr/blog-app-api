@@ -5,24 +5,24 @@ const catchAsync = require("../utils/catchAsync");
 const CustomError = require( "../utils/CustomError" );
 
 const insertPost = catchAsync(async(req,res,next)=>{
-    const { error } = postInsertSchema.validate(req.body);
+  const { error } = postInsertSchema.validate(req.body);
   if (error) {
     return next(new CustomError(400, error.details[0].message));
   }
-    const {title,content} = req.body;
-    const post = Post({title,content});
+    const {title,content,createdBy} = req.body;
+    const post = Post({title,content,createdBy});
     await post.save()
     res.status(201).json({status:"success",data:{_id:post._id}})
 })
 
 const getAllPosts = catchAsync(async(req,res,next)=>{
-    const posts =await Post.find().select(["-__v"])
+    const posts =await Post.find().select(["-__v"]).populate("createdBy","name",)
     res.status(201).json({status:"success",data:posts})
 })
 
 const getPost = catchAsync(async(req,res,next)=>{
     if(!mongoose.Types.ObjectId.isValid(req.params.id)){return next(new CustomError(400,"Invalid Id"))}
-    const posts =await Post.findById(req.params.id).select(["-__v"])
+    const posts =await Post.findById(req.params.id).select(["-__v"]).populate("createdBy","name",)
     res.status(201).json({status:"success",data:posts})
 })
 
