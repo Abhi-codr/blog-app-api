@@ -1,4 +1,5 @@
 const jwt = require("jsonwebtoken");
+const CustomError = require("../utils/CustomError");
 
 const protect = async (req, res, next) => {
   let token;
@@ -11,14 +12,13 @@ const protect = async (req, res, next) => {
         req.headers.authorization.split(" ")[1],
         process.env.JWT_KEY
       );
-      req.id = token.id;
-
+      req._id = token._id;
       next();
     } else {
-      throw "Invalid auth token";
+      throw new CustomError(400, "Invalid Token");
     }
     if (!token) {
-      throw "Invalid token";
+      throw new CustomError(400, "Invalid Token");
     }
   } catch (err) {
     res.status(400).json({ status: "failure", message: err });

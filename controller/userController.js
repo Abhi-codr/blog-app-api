@@ -16,14 +16,19 @@ const loginUser = catchAsync(async (req, res, next) => {
   console.log(req.body);
   const user = await User.findOne({ email });
   if (!user) {
-    next(new CustomError(404, "email or password incorrect"));
+    return next(new CustomError(400, "email or password incorrect"));
   }
   const isPasswordCorrect = await user.verifyPassword(password);
   if (!isPasswordCorrect) {
-    next(new CustomError(404, "email or password incorrect"));
+    return next(new CustomError(400, "email or password incorrect"));
   }
   const token = generateToken({ _id: user._id });
-  res.status(200).json({ name: user.name, _id: user._id, token });
+  res
+    .status(200)
+    .json({
+      status: "success",
+      data: { name: user.name, _id: user._id, token },
+    });
 });
 
 const registerUser = catchAsync(async (req, res, next) => {
