@@ -23,12 +23,10 @@ const loginUser = catchAsync(async (req, res, next) => {
     return next(new CustomError(400, "email or password incorrect"));
   }
   const token = generateToken({ _id: user._id });
-  res
-    .status(200)
-    .json({
-      status: "success",
-      data: { name: user.name, _id: user._id, token },
-    });
+  res.status(200).json({
+    status: "success",
+    data: { name: user.name, _id: user._id, token },
+  });
 });
 
 const registerUser = catchAsync(async (req, res, next) => {
@@ -49,4 +47,9 @@ const registerUser = catchAsync(async (req, res, next) => {
   });
 });
 
-module.exports = { loginUser, registerUser };
+const getUserInfo = catchAsync(async (req, res, next) => {
+  const user = await User.findById(req._id).select(["name", "email"]);
+  res.status(200).send({ status: "success", data: user });
+});
+
+module.exports = { loginUser, registerUser, getUserInfo };

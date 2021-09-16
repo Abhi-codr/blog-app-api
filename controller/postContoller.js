@@ -9,8 +9,8 @@ const insertPost = catchAsync(async (req, res, next) => {
   if (error) {
     return next(new CustomError(400, error.details[0].message));
   }
-  const { title, content, createdBy } = req.body;
-  const post = Post({ title, content, createdBy });
+  const { title, content } = req.body;
+  const post = Post({ title, content, createdBy: req._id });
   await post.save();
   res.status(201).json({ status: "success", data: { _id: post._id } });
 });
@@ -40,15 +40,28 @@ const updatePost = catchAsync(async (req, res, next) => {
   if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
     return next(new CustomError(400, "Invalid Id"));
   }
-  const post = await Post.updateOne({ _id: req.params.id }, req.body);
-  res.status(201).json({ status: "success", data: post });
+  const post = await Post.updateOne(
+    { _id: req.params.id, createdBy: req._id },
+    req.body
+  );
+  if (!post)
+    return res
+      .status(400)
+      .json({ status: "success", message: "post updation not authorized" });
+  res
+    .status(201)
+    .json({ status: "success", message: "post updated successfully" });
 });
 
 const deletePost = catchAsync(async (req, res, next) => {
   if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
     return next(new CustomError(400, "Invalid Id"));
   }
-  const post = await Post.deleteOne({ _id: req.params.id });
+  const post = await Post.deleteOne({ _id: req.params.id, createdBy: req._id });
+  if (!post)
+    return res
+      .status(400)
+      .json({ status: "failure", message: "post deletion not authorized" });
   res.status(201).json({ status: "success", data: post });
 });
 

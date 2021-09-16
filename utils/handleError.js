@@ -3,7 +3,7 @@ const handleError = (err, req, res, next) => {
   if (!err.message) {
     err.message = "Something Went Wrong";
   }
-  console.log(err);
+  // console.log(err);
   res.status(statusCode).json({ status: "failure", message: err.message });
 };
 
