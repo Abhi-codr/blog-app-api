@@ -12,7 +12,7 @@ const insertPost = catchAsync(async (req, res, next) => {
   const { title, content } = req.body;
   const post = Post({ title, content, createdBy: req._id });
   await post.save();
-  res.status(201).json({ status: "success", data: { _id: post._id } });
+  res.status(201).json({ status: "success", data: post });
 });
 
 const getAllPosts = catchAsync(async (req, res, next) => {

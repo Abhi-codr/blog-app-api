@@ -13,7 +13,6 @@ const loginUser = catchAsync(async (req, res, next) => {
     return next(new CustomError(400, error.details[0].message));
   }
   const { email, password } = req.body;
-  console.log(req.body);
   const user = await User.findOne({ email });
   if (!user) {
     return next(new CustomError(400, "email or password incorrect"));
