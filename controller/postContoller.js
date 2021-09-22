@@ -9,8 +9,8 @@ const insertPost = catchAsync(async (req, res, next) => {
   if (error) {
     return next(new CustomError(400, error.details[0].message));
   }
-  const { title, content } = req.body;
-  const post = Post({ title, content, createdBy: req._id });
+  const { title, content, imageUrl } = req.body;
+  const post = Post({ title, content, imageUrl, createdBy: req._id });
   await post.save();
   res.status(201).json({ status: "success", data: post });
 });

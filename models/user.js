@@ -21,7 +21,6 @@ const userSchema = new Schema({
 });
 
 userSchema.methods.verifyPassword = async function (password) {
-  console.log({ password });
   return bcrypt.compare(password, this.password);
 };
 
